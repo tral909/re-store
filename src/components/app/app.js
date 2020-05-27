@@ -1,10 +1,19 @@
 import React from 'react';
+import { Switch, Route } from 'react-router-dom';
 import './app.css';
-import { withBookstoreService } from '../hoc';
+import {
+  HomePage,
+  CartPage
+} from '../pages';
 
-const App = ({ bookstoreService }) => {
-  console.log(bookstoreService.getBooks());
-  return <p>App comp</p>;
+const App = () => {
+  return (
+    // Отрисовывает максимум один Route
+    <Switch>
+      <Route path="/" component={HomePage} exact />
+      <Route path="/cart/" component={CartPage} exact />
+    </Switch>
+  );
 };
 
-export default withBookstoreService()(App);
+export default App;

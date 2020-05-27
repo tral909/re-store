@@ -1,6 +1,6 @@
 
 const initialState = {
-  books: []
+  books: ['INIT!']
 };
 
 const reducer = (state = initialState, action) => {
