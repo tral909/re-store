@@ -1,7 +1,6 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import ShopHeader from '../shop-header';
-import ShoppingCartTable from '../shopping-cart-table';
 import './app.css';
 import {
   HomePage,
@@ -18,7 +17,7 @@ const App = () => {
         <Route path="/" component={HomePage} exact />
         <Route path="/cart/" component={CartPage} exact />
       </Switch>
-      <ShoppingCartTable />
+
     </main>
   );
 };
