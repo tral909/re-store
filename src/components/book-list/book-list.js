@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import BookListItem from '../book-list-item';
+import Spinner from '../spinner';
 import { connect } from 'react-redux';
 import { withBookstoreService } from '../hoc';
 import { booksLoaded } from '../../actions'
@@ -10,22 +11,30 @@ class BookList extends Component {
 
   componentDidMount() {
     // 1. recieve data
-    const { bookstoreService } = this.props;
-    const data = bookstoreService.getBooks();
-    console.log(data);
-
-    // 2. dispatch action to store
-    this.props.booksLoaded(data);
+    const { bookstoreService, booksLoaded } = this.props;
+    bookstoreService.getBooks()
+      .then((data) => {
+        // 2. dispatch action to store
+        // booksLoaded это action creator, который вызывает dispatch
+        // и передает список книг (data) в redux store
+        booksLoaded(data);
+      });
   }
 
   render() {
-    const { books } = this.props;
+    // список книг получаем из redux store (this.props)
+    const { books, loading } = this.props;
+
+    if (loading) {
+      return <Spinner />;
+    }
+
     return (
       <ul className="book-list">
         {
           books.map((book) => {
             return (
-              <li key={book.id}><BookListItem book={book}/></li>
+              <li key={book.id}><BookListItem book={book} /></li>
             )
           })
         }
@@ -36,8 +45,8 @@ class BookList extends Component {
 
 // Эта функция определяет, какие свойства
 // получит компонент из Redux
-const mapStateToProps = ({ books }) => {
-  return { books };
+const mapStateToProps = ({ books, loading }) => {
+  return { books, loading };
 };
 
 // вручную прописанный action в вызове dispatch
