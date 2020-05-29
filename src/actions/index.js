@@ -1,26 +1,35 @@
-
+//[тип запроса]_[обьект]_[действие] для type (naming convention)
 const booksLoaded = (newBooks) => {
   return {
-    type: 'BOOKS_LOADED',
+    // получен результат
+    type: 'FETCH_BOOKS_SUCCESS',
+    // полученные данные
     payload: newBooks
   };
 };
 
 const booksRequested = () => {
   return {
-    type: 'BOOKS_REQUESTED'
+    // запрос отправлен
+    type: 'FETCH_BOOKS_REQUEST'
   };
 };
 
 const booksError = (error) => {
   return {
-    type: 'BOOKS_ERROR',
+    // произошла ошибка
+    type: 'FETCH_BOOKS_FAILURE',
     payload: error
   }
 };
 
+const fetchBooks = (bookstoreService, dispatch) => () => {
+  dispatch(booksRequested());
+  bookstoreService.getBooks()
+    .then((data) => dispatch(booksLoaded(data)))
+    .catch((err) => dispatch(booksError(err)));
+}
+
 export {
-  booksLoaded,
-  booksRequested,
-  booksError
+  fetchBooks
 }
