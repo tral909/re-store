@@ -11,22 +11,7 @@ import './book-list.css';
 class BookList extends Component {
 
   componentDidMount() {
-    // 1. recieve data
-    const {
-      bookstoreService,
-      booksLoaded,
-      booksRequested,
-      booksError
-    } = this.props;
-    booksRequested();
-    bookstoreService.getBooks()
-      .then((data) => {
-        // 2. dispatch action to store
-        // booksLoaded это action creator, который вызывает dispatch
-        // и передает список книг (data) в redux store
-        booksLoaded(data);
-      })
-      .catch((err) => booksError(err));
+    this.props.fetchBooks();
   }
 
   render() {
@@ -83,10 +68,26 @@ const mapStateToProps = ({ books, loading, error }) => {
 // };
 
 // можно еще короче, через обьект с action
-const mapDispatchToProps = {
-  booksLoaded,
-  booksRequested,
-  booksError
+// const mapDispatchToProps = {
+//   booksLoaded,
+//   booksRequested,
+//   booksError
+// };
+
+// скрываем 3 action'a в одну функцию
+const mapDispatchToProps = (dispatch, ownProps) => {
+  const { bookstoreService } = ownProps;
+
+  return {
+    fetchBooks: () => {
+      dispatch(booksRequested());
+      bookstoreService.getBooks()
+        .then((data) => {
+          dispatch(booksLoaded(data));
+        })
+        .catch((err) => dispatch(booksError(err)));
+    }
+  };
 };
 
 // Чтобы получить данные из червиса и передать из в Redux Store используем 2 hoc:
