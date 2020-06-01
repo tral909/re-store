@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import BookListItem from '../book-list-item';
 import Spinner from '../spinner';
 import ErrorIndicator from '../error-indicator';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withBookstoreService } from '../hoc';
 import { fetchBooks, bookAddToCart } from '../../actions'
@@ -86,10 +87,10 @@ const mapStateToProps = ({ bookList: { books, loading, error }}) => {
 
 // скрываем 3 action'a в одну функцию (fetchBooks)
 const mapDispatchToProps = (dispatch, { bookstoreService }) => {
-  return {
-    fetchBooks: fetchBooks(bookstoreService, dispatch),
-    onAddedToCart: id => dispatch(bookAddToCart(id))
-  };
+  return bindActionCreators({
+    fetchBooks: fetchBooks(bookstoreService),
+    onAddedToCart: bookAddToCart
+  }, dispatch);
 };
 
 // Чтобы получить данные из червиса и передать из в Redux Store используем 2 hoc:
